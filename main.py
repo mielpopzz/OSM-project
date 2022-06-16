@@ -7,7 +7,7 @@ import math
 
 api = overpass.API()
 
-area = 'Московская область'  # <--area can be changed
+area = 'Île-de-France'  # <--area can be changed
 station_response = api.get(f'area[name="{area}"];node(area)[railway=station];',
                            responseformat='csv(::id,::type,"name",::lat,::lon)')
 station_lats = []
@@ -147,11 +147,11 @@ for i in range(0, len(distances1)):
     for j in range(0, len(distances1[i])):
         distances[distances1[i][0]] = dict(distances1[i][1])
 
-unvisited = {node: [0, '9815064397'] for node in node1}  # using None as +inf
+current = res[len(res) // 2][0]
+unvisited = {node: [0, current] for node in node1}  # using None as +inf
 visited = {}
-current = '9815064397'
-currentSave = '9815064397'
-currentDistance = [0, '9815064397']
+currentSave = current
+currentDistance = [0, current]
 unvisited[current] = currentDistance
 minimumprev = 1000
 while True:
@@ -176,13 +176,40 @@ print("-------------------------------------------------------------------------
 print(visited)
 print("--------------------------------------------------------------------------------")
 
+dst = []
+for i in visited:
+    dst.append(0)
+    cur = visited[f'{i}']
+    while cur[0] != 0 and cur[1] != currentSave:
+        dst[len(dst) - 1] += 1
+        cur = visited[cur[1]]
+    if cur[0] == 0 and cur[1] != currentSave:
+        dst[len(dst) - 1] = 0
+print(dst)
+k = 0
+for i in range(len(dst)):
+    if dst[i] == max(dst):
+        k = i
+        break
+k1 = 0
+crt = ''
+for i in visited:
+    if k1 == k:
+        crt = i
+        break
+    k1 += 1
+print(f'{crt}')
+for r in range(len(res)):
+    if res[r][0] == f'{crt}':
+        cur = res[r][0]
+
 route = []
-cur = '3995048466'
-curSave = '3995048466'
+#cur = res[k][0]
+curSave = cur
 while cur != currentSave:
-    route.insert(0, cur)
+    route.append(cur)
     cur = visited[cur][1]
-route.insert(0, currentSave)
+route.append(currentSave)
 print(route)
 
 node_lats = np.asarray([node['lat'] for id, node in nodes.items()])
@@ -199,7 +226,6 @@ for k in range(len(route)):
             way_x.append(res[i][1][0])
             way_y.append(res[i][1][1])
 ax.plot(way_x, way_y, color='blue', linewidth=3)
-
 '''
 way_x = []
 way_y = []
@@ -236,7 +262,7 @@ for i in range(len(res)):
         x = res[i][1][0] 
         y = res[i][1][1] 
         continue
-ax.scatter(x, y, alpha=0.8, c = "blue", edgecolors='none', s=50)
+ax.scatter(x, y, alpha=0.8, c = "blue", edgecolors='none', s=100)
 for i in range(len(res)):
     if res[i][0] == currentSave:
         x = res[i][1][0] 
@@ -245,5 +271,5 @@ for i in range(len(res)):
 print(x)
 print(y)
 
-ax.scatter(x, y, alpha=0.8, c = "red", edgecolors='none', s=50)
+ax.scatter(x, y, alpha=0.8, c = "red", edgecolors='none', s=100)
 plt.show()
