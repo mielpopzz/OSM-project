@@ -26,6 +26,7 @@ nodes = {node['id']: node for node in nodes}
 map = smopy.Map((np.min(station_lats), np.min(station_lons), np.max(station_lats), np.max(station_lons)), z=12)
 ax = map.show_mpl(figsize=(8, 6))
 
+
 # Рисуем пути
 for way in ways:
     way_nodes_id = way['nodes']
@@ -40,10 +41,11 @@ for way in ways:
         way_y.append(y)
     ax.plot(way_x, way_y, color='green', linewidth=3)
 # Рисуем станции
-for lat, lon in zip(station_lats, station_lons):
-    x, y = map.to_pixels(lat, lon)
-    ax.plot(x, y, 'or')
+#for lat, lon in zip(station_lats, station_lons):
+#    x, y = map.to_pixels(lat, lon)
+#   ax.scatter(x, y, alpha=0.8, c="blue", edgecolors='none', s = 50)
 
+    
 g1 = []
 i = 0
 for w in ways:
@@ -145,11 +147,11 @@ for i in range(0, len(distances1)):
     for j in range(0, len(distances1[i])):
         distances[distances1[i][0]] = dict(distances1[i][1])
 
-unvisited = {node: [0, '2000431034'] for node in node1}  # using None as +inf
+unvisited = {node: [0, '9815064397'] for node in node1}  # using None as +inf
 visited = {}
-current = '2000431034'
-currentSave = '2000431034'
-currentDistance = [0, '2000431034']
+current = '9815064397'
+currentSave = '9815064397'
+currentDistance = [0, '9815064397']
 unvisited[current] = currentDistance
 minimumprev = 1000
 while True:
@@ -168,18 +170,19 @@ while True:
     if not unvisited: break
     k = 0
     candidates = [node for node in unvisited.items() if node[1]]
-    current, currentDistance = sorted(candidates, key=lambda x: x[1], reverse=True)[0]
+    current, currentDistance = sorted(candidates, key = lambda x: x[1], reverse=True)[0]
     minimumprev = unvisited[current][0]
 print("--------------------------------------------------------------------------------")
 print(visited)
 print("--------------------------------------------------------------------------------")
 
 route = []
-cur = '3599132669'
+cur = '3995048466'
+curSave = '3995048466'
 while cur != currentSave:
-    route.append(cur)
+    route.insert(0, cur)
     cur = visited[cur][1]
-route.append(currentSave)
+route.insert(0, currentSave)
 print(route)
 
 node_lats = np.asarray([node['lat'] for id, node in nodes.items()])
@@ -207,24 +210,40 @@ for t in range(len(route) - 1):
             save_ind.append(r)
     for r in range(len(res)):
         if res[r][0] == route[t + 1]:
-            save_ind.append(r)
+            save_ind.append(r)       
     print("--------------------------------------------------------------------------------")
     print(save_ind)
     print("--------------------------------------------------------------------------------")
-    save_ind2 = 0
+    save_ind2 = 0           
     for i in range(len(res[save_ind[0]][2])):
         for j in range(len(res[save_ind[1]][2])):
             if res[save_ind[0]][2][i][0] == res[save_ind[1]][2][j][0]:
                 save_ind2 = i
-    way_x.append(res[save_ind[0]][1][0])
-    way_y.append(res[save_ind[0]][1][1])
+    way_x.append(res[save_ind[1]][1][0])
+    way_y.append(res[save_ind[1]][1][1])
     for k in range(len(res[save_ind[0]][2][save_ind2][2])):
         way_x.append(res[save_ind[0]][2][save_ind2][2][k][0])
-        way_y.append(res[save_ind[0]][2][save_ind2][2][k][1])
-ax.plot(way_x, way_y, color='yellow', linewidth=3)
+        way_y.append(res[save_ind[0]][2][save_ind2][2][k][1])    
+    way_x.append(res[save_ind[0]][1][0])
+    way_y.append(res[save_ind[0]][1][1])    
+    ax.plot(way_x, way_y, color="violet", linewidth=3)    
+    way_x = []
+    way_y = []
+
+
+for i in range(len(res)):
+    if res[i][0] == curSave:
+        x = res[i][1][0] 
+        y = res[i][1][1] 
+        continue
+ax.scatter(x, y, alpha=0.8, c = "blue", edgecolors='none', s=50)
+for i in range(len(res)):
+    if res[i][0] == currentSave:
+        x = res[i][1][0] 
+        y = res[i][1][1] 
+        continue
+print(x)
+print(y)
+
+ax.scatter(x, y, alpha=0.8, c = "red", edgecolors='none', s=50)
 plt.show()
-
-
-
-
-
