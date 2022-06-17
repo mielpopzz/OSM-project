@@ -54,7 +54,7 @@ for w in ways:
     if "maxspeed" in w["tags"]:
         speed = w["tags"]["maxspeed"]
     else:
-        speed = 150
+        speed = 90
     coord = []
     for node_id in way_nodes_id:
         node = nodes[node_id]
