@@ -7,7 +7,7 @@ import math
 
 api = overpass.API()
 
-area = 'Île-de-France'  # <--area can be changed
+area = 'Московская область'  # <--area can be changed
 station_response = api.get(f'area[name="{area}"];node(area)[railway=station];',
                            responseformat='csv(::id,::type,"name",::lat,::lon)')
 station_lats = []
@@ -54,7 +54,7 @@ for w in ways:
     if "maxspeed" in w["tags"]:
         speed = w["tags"]["maxspeed"]
     else:
-        speed = 150
+        speed = 90
     coord = []
     for node_id in way_nodes_id:
         node = nodes[node_id]
