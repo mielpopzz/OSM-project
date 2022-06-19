@@ -142,10 +142,6 @@ for i in range(0, len(l)):
     distances1.append(r1)
     r1 = []
     r2 = []
-
-print("---------------------")
-print(distances1)
-print("---------------------")
 i = 0
 k = 0
 while [[]] in distances1:
@@ -194,13 +190,6 @@ while int(flag) != 0:
         candidates = [node for node in unvisited.items() if node[1]]
         current, currentDistance = sorted(candidates, key=lambda x: x[1], reverse=True)[0]
         minimumprev = unvisited[current][0]
-    print("--------------------------------------------------------------------------------")
-    print(visited)
-    print("--------------------------------------------------------------------------------")
-    print(cur)
-    print("--------------------------------------------------------------------------------")
-    print(visited[cur])
-    print("--------------------------------------------------------------------------------")
     route = []
     # cur = res[k][0]
     curSave = cur
